@@ -1,33 +1,21 @@
 
-from rules import (
+# Performs fuzzy inference and defuzzification.
+
+from fuzzy_logic.rules import (
     evaluate_beginner_short_rule,
-    evaluate_beginner_medium_rule
+    evaluate_beginner_medium_rule,
+    evaluate_intensity_preference_rule
 )
 
-from output import calculate_output_memberships
+from fuzzy_logic.output import calculate_output_memberships
+from fuzzy_logic.routine import select_routine
 
-from routine import select_routine
 
-
-def aggregate_outputs(time, experience):
-    """
-    Perform Mamdani output clipping
-    and aggregation for two rules.
-    """
-
-    # Step 1: Evaluate fuzzy rules
-
-    gentle_strength = evaluate_beginner_short_rule(
-        time,
-        experience
-    )
-
-    balanced_strength = evaluate_beginner_medium_rule(
-        time,
-        experience
-    )
-
-    # Step 2: Create an output universe
+def aggregate_outputs(
+    time,
+    experience,
+    requested_intensity="unknown"
+):
 
     output_universe = [
         i / 10 for i in range(0, 101)
@@ -35,132 +23,118 @@ def aggregate_outputs(time, experience):
 
     aggregated_output = []
 
-    # Step 3: Clip and aggregate output functions
+    short_strength = evaluate_beginner_short_rule(
+        time,
+        experience
+    )
+
+    medium_strength = evaluate_beginner_medium_rule(
+        time,
+        experience
+    )
+
+    gentle_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "gentle"
+    )
+
+    balanced_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "balanced"
+    )
+
+    active_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "active"
+    )
 
     for intensity in output_universe:
 
-        memberships = calculate_output_memberships(
+        output_memberships = calculate_output_memberships(
             intensity
         )
 
+        gentle_strength = max(
+            short_strength,
+            gentle_preference
+        )
+
+        balanced_strength = max(
+            medium_strength,
+            balanced_preference
+        )
+
+        active_strength = active_preference
+
         gentle_value = min(
             gentle_strength,
-            memberships["Gentle"]
+            output_memberships["Gentle"]
         )
 
         balanced_value = min(
             balanced_strength,
-            memberships["Balanced"]
+            output_memberships["Balanced"]
         )
 
-        active_value = 0.0
+        active_value = min(
+            active_strength,
+            output_memberships["Active"]
+        )
 
-        combined_value = max(
+        aggregated_value = max(
             gentle_value,
             balanced_value,
             active_value
         )
 
         aggregated_output.append(
-            (intensity, combined_value)
+            (intensity, aggregated_value)
         )
 
     return aggregated_output
 
 
 def defuzzify(aggregated_output):
-    """
-    Convert aggregated fuzzy output
-    into one numerical intensity using
-    the centroid method.
-    """
 
-    numerator = 0.0
-    denominator = 0.0
+    numerator = sum(
+        intensity * membership
+        for intensity, membership in aggregated_output
+    )
 
-    for intensity, degree in aggregated_output:
-
-        numerator += intensity * degree
-
-        denominator += degree
+    denominator = sum(
+        membership
+        for _, membership in aggregated_output
+    )
 
     if denominator == 0:
 
-        raise ValueError(
-            "Cannot defuzzify: total membership is zero."
-        )
+        return 0.0
 
-    crisp_output = numerator / denominator
+    return numerator / denominator
 
-    return crisp_output
-
-
-# =====================================
-# RUN COMPLETE INFERENCE SYSTEM
-# =====================================
 
 if __name__ == "__main__":
 
-    # User inputs
-
     time = 25
     experience = 4
+    requested_intensity = "gentle"
 
-    # Step 1: Mamdani aggregation
-
-    result = aggregate_outputs(
+    aggregated_output = aggregate_outputs(
         time,
-        experience
+        experience,
+        requested_intensity
     )
 
-    print("\nMAMDANI AGGREGATION")
-    print("-" * 40)
-
-    print("Available time:", time)
-    print("Experience:", experience)
-
-    print("\nSample aggregated values:")
-
-    for intensity, degree in result[::10]:
-
-        print(
-            f"Intensity: {intensity:.1f}, "
-            f"Membership: {degree:.3f}"
-        )
-
-    # Step 2: Defuzzification
-
-    final_intensity = defuzzify(result)
-
-    print("\nDEFUZZIFICATION")
-    print("-" * 40)
-
-    print(
-        "Final defuzzified intensity:",
-        round(final_intensity, 3)
+    intensity = defuzzify(
+        aggregated_output
     )
 
-    # Step 3: Select yoga routine
-
-    selected_routine = select_routine(
-        final_intensity
+    routine = select_routine(
+        intensity
     )
 
-    print("\nSELECTED YOGA ROUTINE")
-    print("-" * 40)
-
-    print(
-        "Routine:",
-        selected_routine["name"]
-    )
-
-    print(
-        "Description:",
-        selected_routine["description"]
-    )
-
-    print("\nRecommended Poses:")
-
-    for pose in selected_routine["poses"]:
-
-        print("-", pose)
+    print(f"Defuzzified intensity: {intensity:.3f}")
+    print(f"Selected routine: {routine['name']}")

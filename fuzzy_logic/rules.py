@@ -1,57 +1,54 @@
 
-from membership import calculate_time_memberships
-from experience import calculate_experience_memberships
+# Evaluates fuzzy rules for yoga routine selection.
+
+from fuzzy_logic.membership import calculate_time_memberships
+from fuzzy_logic.experience import calculate_experience_memberships
 
 
 def evaluate_beginner_short_rule(time, experience):
-    """
-    Rule:
-    IF experience is Beginner
-    AND available time is Short
-    THEN Gentle routine.
-    """
 
     time_memberships = calculate_time_memberships(time)
+    experience_memberships = calculate_experience_memberships(experience)
 
-    experience_memberships = calculate_experience_memberships(
-        experience
+    return min(
+        time_memberships["Short"],
+        experience_memberships["Beginner"]
     )
-
-    short_degree = time_memberships["Short"]
-
-    beginner_degree = experience_memberships["Beginner"]
-
-    rule_strength = min(short_degree, beginner_degree)
-
-    return rule_strength
 
 
 def evaluate_beginner_medium_rule(time, experience):
-    """
-    Rule:
-    IF experience is Beginner
-    AND available time is Medium
-    THEN Balanced routine.
-    """
 
     time_memberships = calculate_time_memberships(time)
+    experience_memberships = calculate_experience_memberships(experience)
+
+    return min(
+        time_memberships["Medium"],
+        experience_memberships["Beginner"]
+    )
+
+
+def evaluate_intensity_preference_rule(
+    experience,
+    requested_intensity,
+    target_intensity
+):
 
     experience_memberships = calculate_experience_memberships(
         experience
     )
 
-    medium_degree = time_memberships["Medium"]
+    experience_strength = max(
+        experience_memberships["Beginner"],
+        experience_memberships["Intermediate"],
+        experience_memberships["Advanced"]
+    )
 
-    beginner_degree = experience_memberships["Beginner"]
+    if requested_intensity == target_intensity:
 
-    rule_strength = min(medium_degree, beginner_degree)
+        return min(experience_strength, 0.6)
 
-    return rule_strength
+    return 0.0
 
-
-# =====================================
-# TESTING THE FUZZY RULES
-# =====================================
 
 if __name__ == "__main__":
 
@@ -68,25 +65,12 @@ if __name__ == "__main__":
         experience
     )
 
-    aggregated_strength = max(
-        short_strength,
-        medium_strength
+    gentle_strength = evaluate_intensity_preference_rule(
+        experience,
+        "gentle",
+        "gentle"
     )
 
-    print("\nAvailable time:", time, "minutes")
-    print("Experience:", experience)
-
-    print(
-        "Short rule strength:",
-        round(short_strength, 3)
-    )
-
-    print(
-        "Medium rule strength:",
-        round(medium_strength, 3)
-    )
-
-    print(
-        "Aggregated strength:",
-        round(aggregated_strength, 3)
-    )
+    print(f"Short rule strength: {short_strength:.3f}")
+    print(f"Medium rule strength: {medium_strength:.3f}")
+    print(f"Gentle preference strength: {gentle_strength:.3f}")

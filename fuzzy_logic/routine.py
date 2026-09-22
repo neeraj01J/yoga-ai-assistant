@@ -1,11 +1,37 @@
 
-def select_routine(intensity):
+def select_routine(intensity, requested_intensity="unknown"):
     """
-    Select a yoga routine based on
-    the defuzzified intensity score.
+    Select a yoga routine using fuzzy intensity
+    and the user's requested intensity.
     """
 
-    if intensity < 3.5:
+    if requested_intensity == "gentle":
+
+        return {
+            "name": "Gentle Yoga",
+            "description": "A light and relaxing yoga routine.",
+            "poses": [
+                "Child's Pose",
+                "Cat-Cow",
+                "Easy Seated Pose"
+            ]
+        }
+
+    elif requested_intensity == "active":
+
+        return {
+            "name": "Active Yoga",
+            "description": "A more energetic yoga routine.",
+            "poses": [
+                "Cat-Cow",
+                "Warrior II",
+                "Chair Pose",
+                "Plank"
+            ]
+        }
+
+    elif intensity < 3.5:
+
         return {
             "name": "Gentle Yoga",
             "description": "A light and relaxing yoga routine.",
@@ -17,6 +43,7 @@ def select_routine(intensity):
         }
 
     elif intensity < 6.5:
+
         return {
             "name": "Balanced Yoga",
             "description": "A moderate yoga routine for balance and flexibility.",
@@ -29,6 +56,7 @@ def select_routine(intensity):
         }
 
     else:
+
         return {
             "name": "Active Yoga",
             "description": "A more energetic yoga routine.",
@@ -46,8 +74,12 @@ def select_routine(intensity):
 if __name__ == "__main__":
 
     intensity = 3.927
+    requested_intensity = "gentle"
 
-    routine = select_routine(intensity)
+    routine = select_routine(
+        intensity,
+        requested_intensity
+    )
 
     print("Selected Routine:", routine["name"])
     print("Description:", routine["description"])
@@ -55,4 +87,5 @@ if __name__ == "__main__":
     print("\nRecommended Poses:")
 
     for pose in routine["poses"]:
+
         print("-", pose)

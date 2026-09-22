@@ -1,5 +1,7 @@
 
-from membership import triangular_membership
+# Calculates membership values for yoga intensity outputs.
+
+from fuzzy_logic.membership import triangular_membership
 
 
 GENTLE = (0, 3, 6)
@@ -37,15 +39,21 @@ def calculate_output_memberships(intensity):
         "Active": active_degree
     }
 
+
 # Test the output membership function
 
 if __name__ == "__main__":
 
     intensity = 5
 
-    results = calculate_output_memberships(intensity)
+    results = calculate_output_memberships(
+        intensity
+    )
 
     print("Intensity:", intensity)
 
     for category, degree in results.items():
-        print(f"{category}: {degree:.3f}")
+
+        print(
+            f"{category}: {degree:.3f}"
+        )

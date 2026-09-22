@@ -1,4 +1,7 @@
-from membership import triangular_membership
+
+# Calculates fuzzy membership values for experience levels.
+
+from fuzzy_logic.membership import triangular_membership
 
 
 def calculate_experience_memberships(experience):
@@ -26,9 +29,14 @@ if __name__ == "__main__":
 
     experience = 4
 
-    result = calculate_experience_memberships(experience)
+    result = calculate_experience_memberships(
+        experience
+    )
 
     print("Experience:", experience)
 
     for category, degree in result.items():
-        print(f"{category}: {degree:.3f}")
+
+        print(
+            f"{category}: {degree:.3f}"
+        )

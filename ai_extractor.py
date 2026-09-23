@@ -8,12 +8,13 @@ import time
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+
 load_dotenv()
 
-# Create Gemini model
-# Create Gemini model
+
+# Create Gemini model.
 model = ChatGoogleGenerativeAI(
-    model="gemini-3.6-flash",
+    model="gemini-3.1-flash-lite",
     timeout=20,
     max_retries=0,
     disable_streaming=True,
@@ -57,7 +58,7 @@ User input:
 {user_input}
 """
 
-    # Measure Gemini response time
+    # Measure Gemini response time.
     start_time = time.perf_counter()
 
     response = model.invoke(prompt)
@@ -71,7 +72,7 @@ User input:
 
     response_text = response.content
 
-    # Handle Gemini's possible list-based response format
+    # Handle Gemini's possible list-based response format.
     if isinstance(response_text, list):
 
         response_text = "".join(
@@ -81,7 +82,7 @@ User input:
             and item.get("type") == "text"
         )
 
-    # Remove Markdown JSON code fences if present
+    # Remove Markdown JSON code fences if present.
     response_text = response_text.strip()
 
     if response_text.startswith("```json"):
@@ -96,7 +97,7 @@ User input:
 
         response_text = response_text[:-3]
 
-    # Convert JSON text into a Python dictionary
+    # Convert JSON text into a Python dictionary.
     preferences = json.loads(
         response_text.strip()
     )

@@ -4,11 +4,15 @@
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+
 load_dotenv()
 
 
+# Create Gemini model.
 model = ChatGoogleGenerativeAI(
-    model="gemini-3.6-flash",
+    model="gemini-3.1-flash-lite",
+    timeout=20,
+    max_retries=0,
     disable_streaming=True,
     thinking_level="minimal"
 )
@@ -56,7 +60,8 @@ Do not invent information about the user.
         response_text = "".join(
             item.get("text", "")
             for item in response_text
-            if item.get("type") == "text"
+            if isinstance(item, dict)
+            and item.get("type") == "text"
         )
 
     return response_text.strip()

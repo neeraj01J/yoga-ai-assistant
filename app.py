@@ -1,8 +1,13 @@
+
 import streamlit as st
 
 from app_logic import process_yoga_request
 from fuzzy_logic.output import calculate_output_memberships
 
+
+# =========================================================
+# PAGE CONFIGURATION
+# =========================================================
 
 st.set_page_config(
     page_title="Yoga AI Assistant",
@@ -11,24 +16,301 @@ st.set_page_config(
 )
 
 
-# Stores the generated result.
+# =========================================================
+# CUSTOM CSS STYLING
+# =========================================================
+
+st.markdown(
+    """
+    <style>
+
+    /* =========================================
+       APPLICATION
+    ========================================= */
+
+    .stApp {
+        background-color: var(--background-color);
+    }
+
+    .block-container {
+        max-width: 1050px;
+        padding-top: 2.2rem;
+        padding-bottom: 3rem;
+    }
+
+    header[data-testid="stHeader"] {
+        background-color: var(--background-color);
+    }
+
+    footer {
+        visibility: hidden;
+    }
+
+
+    /* =========================================
+       TYPOGRAPHY
+    ========================================= */
+
+    h1 {
+        font-size: 2.35rem !important;
+        font-weight: 750 !important;
+        letter-spacing: -1.4px;
+        line-height: 1.2 !important;
+        margin-bottom: 0.7rem !important;
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+        font-weight: 750 !important;
+        letter-spacing: -0.4px;
+        margin-top: 1.7rem !important;
+        margin-bottom: 0.7rem !important;
+    }
+
+    h3 {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+    }
+
+    p {
+        line-height: 1.65;
+    }
+
+
+    /* =========================================
+       BRAND AND INTRODUCTION
+    ========================================= */
+
+    .brand-label {
+        font-size: 0.72rem;
+        font-weight: 750;
+        letter-spacing: 0.13rem;
+        text-transform: uppercase;
+        opacity: 0.6;
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        opacity: 0.72;
+        margin-bottom: 1.1rem;
+    }
+
+
+    /* =========================================
+       TEXT AREA
+    ========================================= */
+
+    .stTextArea label {
+        font-size: 0.88rem !important;
+        font-weight: 650 !important;
+    }
+
+    .stTextArea textarea {
+        border-radius: 14px !important;
+        border: 1px solid var(--border-color, #d9dee7) !important;
+        padding: 15px !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        box-shadow: none !important;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease !important;
+    }
+
+    .stTextArea textarea:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 1px var(--primary-color) !important;
+    }
+
+
+    /* =========================================
+       BUTTONS
+    ========================================= */
+
+    .stButton > button {
+        min-height: 45px;
+        border-radius: 12px !important;
+        border: 1px solid var(--border-color, #d9dee7) !important;
+        font-size: 0.88rem !important;
+        font-weight: 650 !important;
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            background-color 0.2s ease !important;
+    }
+
+    .stButton > button:hover {
+        border-color: var(--primary-color) !important;
+        transform: translateY(-1px);
+    }
+
+    .stButton > button:focus {
+        box-shadow: none !important;
+    }
+
+
+    /* =========================================
+       METRIC CARDS
+    ========================================= */
+
+    [data-testid="stMetric"] {
+        background: var(--secondary-background-color);
+        border: 1px solid var(--border-color, #d9dee7);
+        border-radius: 14px;
+        padding: 15px 17px;
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    [data-testid="stMetric"]:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    [data-testid="stMetricLabel"] {
+        font-size: 0.78rem !important;
+        font-weight: 550 !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.3rem !important;
+        font-weight: 750 !important;
+    }
+
+
+    /* =========================================
+       BORDERED CONTAINERS
+    ========================================= */
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 15px !important;
+        border: 1px solid var(--border-color, #d9dee7) !important;
+        background: var(--secondary-background-color);
+        padding: 5px;
+        transition: border-color 0.2s ease;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: var(--primary-color) !important;
+    }
+
+
+    /* =========================================
+       EXPANDERS
+    ========================================= */
+
+    [data-testid="stExpander"] {
+        border-radius: 12px !important;
+        border: 1px solid var(--border-color, #d9dee7) !important;
+        background: var(--secondary-background-color);
+    }
+
+
+    /* =========================================
+       ALERTS
+    ========================================= */
+
+    [data-testid="stAlert"] {
+        border-radius: 12px !important;
+    }
+
+
+    /* =========================================
+       DIVIDERS
+    ========================================= */
+
+    hr {
+        margin-top: 1.4rem !important;
+        margin-bottom: 1.4rem !important;
+        border-color: var(--border-color, #d9dee7) !important;
+    }
+
+
+    /* =========================================
+       PROGRESS BAR
+    ========================================= */
+
+    [data-testid="stProgressBar"] > div > div {
+        border-radius: 20px;
+    }
+
+
+    /* =========================================
+       RESPONSIVE DESIGN
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+        .block-container {
+            padding-top: 1.4rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem !important;
+        }
+
+        h2 {
+            font-size: 1.25rem !important;
+        }
+
+        [data-testid="stMetricValue"] {
+            font-size: 1.05rem !important;
+        }
+
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# SESSION STATE
+# =========================================================
+
 if "result" not in st.session_state:
     st.session_state.result = None
 
-
-# Controls fuzzy calculation visibility.
 if "show_fuzzy" not in st.session_state:
     st.session_state.show_fuzzy = False
 
 
-# Page header.
-st.title("🧘 AI-Based Yoga Routine Assistant")
+# =========================================================
+# PAGE HEADER
+# =========================================================
 
-st.write(
-    "Describe your yoga requirements and get a personalized routine "
-    "using AI and fuzzy logic."
+st.markdown(
+    """
+    <div class="brand-label">
+        YOGAFLOW AI / PERSONAL PRACTICE
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
+st.title("🧘 AI-Based Yoga Routine Assistant")
+
+st.markdown(
+    """
+    <div class="hero-description">
+        Describe your yoga requirements and get a personalized
+        routine using AI and fuzzy logic.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# USER INPUT
+# =========================================================
 
 user_input = st.text_area(
     "Describe your yoga requirements",
@@ -40,6 +322,10 @@ user_input = st.text_area(
     key="yoga_input"
 )
 
+
+# =========================================================
+# ACTION BUTTONS
+# =========================================================
 
 col1, col2 = st.columns(2)
 
@@ -58,7 +344,10 @@ with col2:
     )
 
 
-# Reset the generated result.
+# =========================================================
+# RESET
+# =========================================================
+
 if reset:
 
     st.session_state.result = None
@@ -67,7 +356,10 @@ if reset:
     st.rerun()
 
 
-# Generate a new routine.
+# =========================================================
+# GENERATE ROUTINE
+# =========================================================
+
 if generate:
 
     if user_input.strip() == "":
@@ -88,40 +380,104 @@ if generate:
                     user_input
                 )
 
-                # Hide fuzzy calculation for every new result.
                 st.session_state.show_fuzzy = False
 
         except Exception as error:
 
-            error_message = str(error)
+            error_message = str(error).lower()
+
+
+            # ---------------------------------------------
+            # TIMEOUT ERROR
+            # ---------------------------------------------
 
             if (
-                "429" in error_message
-                or "RESOURCE_EXHAUSTED" in error_message
-                or "quota" in error_message.lower()
+                "readtimeout" in error_message
+                or "timed out" in error_message
+                or "timeout" in error_message
             ):
 
                 st.error(
-                    "Gemini API quota exceeded."
+                    "⏳ The AI service took too long to respond."
                 )
 
                 st.info(
-                    "The AI service has reached its current usage limit. "
-                    "Please wait and check your Gemini API quota."
+                    "Please try again in a few seconds. "
+                    "The request may have been delayed by the "
+                    "AI service or your internet connection."
                 )
+
+
+            # ---------------------------------------------
+            # API QUOTA ERROR
+            # ---------------------------------------------
+
+            elif (
+                "429" in error_message
+                or "resource_exhausted" in error_message
+                or "quota" in error_message
+            ):
+
+                st.error(
+                    "⚠️ Gemini API quota exceeded."
+                )
+
+                st.info(
+                    "The AI service has reached its current "
+                    "usage limit. Please wait and check "
+                    "your Gemini API quota."
+                )
+
+
+            # ---------------------------------------------
+            # CONNECTION ERROR
+            # ---------------------------------------------
+
+            elif (
+                "connecterror" in error_message
+                or "connection" in error_message
+                or "network" in error_message
+            ):
+
+                st.error(
+                    "🌐 Unable to connect to the AI service."
+                )
+
+                st.info(
+                    "Check your internet connection and try again."
+                )
+
+
+            # ---------------------------------------------
+            # OTHER ERRORS
+            # ---------------------------------------------
 
             else:
 
                 st.error(
-                    "Something went wrong while generating your routine."
+                    "Something went wrong while generating "
+                    "your routine."
                 )
+
+                st.info(
+                    "Please try again. If the issue continues, "
+                    "check the technical details below."
+                )
+
+
+            # ---------------------------------------------
+            # ERROR DETAILS
+            # ---------------------------------------------
 
             with st.expander("View Error Details"):
 
                 st.exception(error)
 
 
-# Display the generated result.
+# =========================================================
+# DISPLAY GENERATED RESULT
+# =========================================================
+
 if st.session_state.result:
 
     result = st.session_state.result
@@ -132,12 +488,19 @@ if st.session_state.result:
     intensity = result["intensity"]
 
 
+    # =====================================================
+    # SUCCESS MESSAGE
+    # =====================================================
+
     st.success(
         "Yoga routine generated successfully!"
     )
 
 
-    # User preferences section.
+    # =====================================================
+    # USER PREFERENCES
+    # =====================================================
+
     st.subheader("👤 Your Preferences")
 
     col1, col2, col3 = st.columns(3)
@@ -164,7 +527,10 @@ if st.session_state.result:
         )
 
 
-    # Routine summary.
+    # =====================================================
+    # ROUTINE SUMMARY
+    # =====================================================
+
     st.subheader("📊 Routine Summary")
 
     total_duration = sum(
@@ -191,7 +557,10 @@ if st.session_state.result:
         )
 
 
-    # Selected routine.
+    # =====================================================
+    # SELECTED ROUTINE
+    # =====================================================
+
     st.subheader(
         f'🧘 {routine["name"]}'
     )
@@ -201,8 +570,18 @@ if st.session_state.result:
     )
 
 
-    # Fuzzy calculation button at the top-right.
+    # =====================================================
+    # FUZZY BUTTON
+    # =====================================================
+
     fuzzy_col1, fuzzy_col2 = st.columns([3, 1])
+
+    with fuzzy_col1:
+
+        st.caption(
+            "View the technical fuzzy inference details "
+            "used to calculate the routine intensity."
+        )
 
     with fuzzy_col2:
 
@@ -224,7 +603,10 @@ if st.session_state.result:
             st.rerun()
 
 
-    # Display fuzzy calculation only when requested.
+    # =====================================================
+    # FUZZY CALCULATION
+    # =====================================================
+
     if st.session_state.show_fuzzy:
 
         st.divider()
@@ -239,7 +621,10 @@ if st.session_state.result:
             )
 
 
-            # Fuzzy intensity score.
+            # ---------------------------------------------
+            # INTENSITY SCORE
+            # ---------------------------------------------
+
             st.subheader("🎯 Fuzzy Intensity Score")
 
             st.metric(
@@ -252,15 +637,18 @@ if st.session_state.result:
             )
 
             st.caption(
-                "The intensity score is calculated using fuzzy rules "
-                "and centroid defuzzification."
+                "The intensity score is calculated using fuzzy "
+                "rules and centroid defuzzification."
             )
 
 
             st.divider()
 
 
-            # Fuzzy membership function visualization.
+            # ---------------------------------------------
+            # MEMBERSHIP FUNCTIONS
+            # ---------------------------------------------
+
             st.subheader("📈 Fuzzy Membership Functions")
 
             x_values = [
@@ -290,9 +678,7 @@ if st.session_state.result:
                     memberships["Active"]
                 )
 
-            st.line_chart(
-                chart_data
-            )
+            st.line_chart(chart_data)
 
             st.caption(
                 "The graph represents the membership functions "
@@ -303,7 +689,10 @@ if st.session_state.result:
             st.divider()
 
 
-            # Fuzzy logic reasoning.
+            # ---------------------------------------------
+            # FUZZY REASONING
+            # ---------------------------------------------
+
             st.subheader("⚙️ Fuzzy Logic Reasoning")
 
             with st.expander("View Membership Values"):
@@ -329,12 +718,15 @@ if st.session_state.result:
 
             st.info(
                 "Membership values represent the degree to which "
-                "an input belongs to a fuzzy category. Rule strengths "
-                "are used to calculate the final intensity."
+                "an input belongs to a fuzzy category. Rule "
+                "strengths are used to calculate the final intensity."
             )
 
 
-    # Recommended poses.
+    # =====================================================
+    # RECOMMENDED POSES
+    # =====================================================
+
     st.subheader("📋 Recommended Poses")
 
     for index, pose in enumerate(
@@ -359,7 +751,10 @@ if st.session_state.result:
             )
 
 
-    # AI explanation.
+    # =====================================================
+    # AI EXPLANATION
+    # =====================================================
+
     st.subheader("🤖 AI Explanation")
 
     st.write(
@@ -367,36 +762,45 @@ if st.session_state.result:
     )
 
 
-    # Safety note.
+    # =====================================================
+    # SAFETY NOTE
+    # =====================================================
+
     st.warning(
         "Safety Note: These are general yoga suggestions. "
         "Stop if you experience pain or discomfort. "
-        "Consult a qualified instructor or healthcare professional "
-        "if you have health concerns or physical limitations."
+        "Consult a qualified instructor or healthcare "
+        "professional if you have health concerns or "
+        "physical limitations."
     )
 
 
-# Testing section.
+# =========================================================
+# TESTING SECTION
+# =========================================================
+
 st.divider()
 
 st.subheader("🧪 Test the Assistant")
 
-st.markdown(
-    """
-    **Test 1 — Beginner / Gentle**
+with st.expander("View testing examples"):
 
-    `I am a beginner. I have 25 minutes and want a gentle yoga routine.`
+    st.markdown(
+        """
+        **Test 1 — Beginner / Gentle**
 
-    **Test 2 — Intermediate / Active**
+        `I am a beginner. I have 25 minutes and want a gentle yoga routine.`
 
-    `I am an intermediate user. I have 45 minutes and want an active routine.`
+        **Test 2 — Intermediate / Active**
 
-    **Test 3 — Advanced / Active**
+        `I am an intermediate user. I have 45 minutes and want an active routine.`
 
-    `I am advanced. I have 60 minutes and want an active yoga routine.`
+        **Test 3 — Advanced / Active**
 
-    **Test 4 — Beginner / Short**
+        `I am advanced. I have 60 minutes and want an active yoga routine.`
 
-    `I am a beginner. I only have 10 minutes and want gentle yoga.`
-    """
-)
+        **Test 4 — Beginner / Short**
+
+        `I am a beginner. I only have 10 minutes and want gentle yoga.`
+        """
+    )

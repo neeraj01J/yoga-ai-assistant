@@ -1,9 +1,16 @@
 
-# Connects AI extraction, validation, and fuzzy inference.
+# Connects AI extraction, validation, fuzzy inference, and explanation.
 
 from ai_extractor import extract_yoga_preferences
 from validator import validate_preferences
-from fuzzy_logic.inference import aggregate_outputs, defuzzify
+from ai_explanation import generate_routine_explanation
+
+from fuzzy_logic.inference import (
+    aggregate_outputs,
+    defuzzify,
+    get_fuzzy_reasoning
+)
+
 from fuzzy_logic.routine import select_routine
 
 
@@ -51,11 +58,28 @@ def process_yoga_request(user_input):
         requested_intensity
     )
 
+    # Get fuzzy membership values and rule strengths
+    fuzzy_reasoning = get_fuzzy_reasoning(
+        time_minutes,
+        experience_value,
+        requested_intensity
+    )
+
+    # Generate an explanation using Gemini
+    explanation = generate_routine_explanation(
+        preferences,
+        routine,
+        round(intensity, 3),
+        fuzzy_reasoning
+    )
+
     # Return the complete result
     return {
         "preferences": preferences,
         "intensity": round(intensity, 3),
-        "routine": routine
+        "routine": routine,
+        "fuzzy_reasoning": fuzzy_reasoning,
+        "explanation": explanation
     }
 
 

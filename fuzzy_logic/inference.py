@@ -8,6 +8,8 @@ from fuzzy_logic.rules import (
 )
 
 from fuzzy_logic.output import calculate_output_memberships
+from fuzzy_logic.membership import calculate_time_memberships
+from fuzzy_logic.experience import calculate_experience_memberships
 from fuzzy_logic.routine import select_routine
 
 
@@ -116,6 +118,82 @@ def defuzzify(aggregated_output):
     return numerator / denominator
 
 
+def get_fuzzy_reasoning(
+    time,
+    experience,
+    requested_intensity="unknown"
+):
+    """
+    Returns membership values and rule strengths
+    used by the fuzzy inference system.
+    """
+
+    time_memberships = calculate_time_memberships(
+        time
+    )
+
+    experience_memberships = calculate_experience_memberships(
+        experience
+    )
+
+    short_strength = evaluate_beginner_short_rule(
+        time,
+        experience
+    )
+
+    medium_strength = evaluate_beginner_medium_rule(
+        time,
+        experience
+    )
+
+    gentle_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "gentle"
+    )
+
+    balanced_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "balanced"
+    )
+
+    active_preference = evaluate_intensity_preference_rule(
+        experience,
+        requested_intensity,
+        "active"
+    )
+
+    return {
+        "time_memberships": time_memberships,
+        "experience_memberships": experience_memberships,
+        "rule_strengths": {
+            "Beginner + Short Time": round(
+                short_strength,
+                3
+            ),
+            "Beginner + Medium Time": round(
+                medium_strength,
+                3
+            ),
+            "Gentle Preference": round(
+                gentle_preference,
+                3
+            ),
+            "Balanced Preference": round(
+                balanced_preference,
+                3
+            ),
+            "Active Preference": round(
+                active_preference,
+                3
+            )
+        }
+    }
+
+
+# Test fuzzy inference and reasoning.
+
 if __name__ == "__main__":
 
     time = 25
@@ -133,8 +211,44 @@ if __name__ == "__main__":
     )
 
     routine = select_routine(
-        intensity
+        intensity,
+        requested_intensity
     )
 
-    print(f"Defuzzified intensity: {intensity:.3f}")
-    print(f"Selected routine: {routine['name']}")
+    fuzzy_reasoning = get_fuzzy_reasoning(
+        time,
+        experience,
+        requested_intensity
+    )
+
+    print(
+        f"Defuzzified intensity: {intensity:.3f}"
+    )
+
+    print(
+        f"Selected routine: {routine['name']}"
+    )
+
+    print("\nTime Memberships:")
+
+    for name, value in fuzzy_reasoning[
+        "time_memberships"
+    ].items():
+
+        print(f"{name}: {value:.3f}")
+
+    print("\nExperience Memberships:")
+
+    for name, value in fuzzy_reasoning[
+        "experience_memberships"
+    ].items():
+
+        print(f"{name}: {value:.3f}")
+
+    print("\nRule Strengths:")
+
+    for name, value in fuzzy_reasoning[
+        "rule_strengths"
+    ].items():
+
+        print(f"{name}: {value:.3f}")

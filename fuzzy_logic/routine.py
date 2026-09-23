@@ -11,9 +11,21 @@ def select_routine(intensity, requested_intensity="unknown"):
             "name": "Gentle Yoga",
             "description": "A light and relaxing yoga routine.",
             "poses": [
-                "Child's Pose",
-                "Cat-Cow",
-                "Easy Seated Pose"
+                {
+                    "name": "Child's Pose",
+                    "duration": 3,
+                    "benefit": "Encourages relaxation and gentle stretching."
+                },
+                {
+                    "name": "Cat-Cow",
+                    "duration": 4,
+                    "benefit": "Improves spinal mobility and body awareness."
+                },
+                {
+                    "name": "Easy Seated Pose",
+                    "duration": 3,
+                    "benefit": "Supports calm breathing and relaxation."
+                }
             ]
         }
 
@@ -23,10 +35,26 @@ def select_routine(intensity, requested_intensity="unknown"):
             "name": "Active Yoga",
             "description": "A more energetic yoga routine.",
             "poses": [
-                "Cat-Cow",
-                "Warrior II",
-                "Chair Pose",
-                "Plank"
+                {
+                    "name": "Cat-Cow",
+                    "duration": 4,
+                    "benefit": "Warms up the spine and improves mobility."
+                },
+                {
+                    "name": "Warrior II",
+                    "duration": 5,
+                    "benefit": "Develops balance and lower-body strength."
+                },
+                {
+                    "name": "Chair Pose",
+                    "duration": 4,
+                    "benefit": "Builds leg and core strength."
+                },
+                {
+                    "name": "Plank",
+                    "duration": 3,
+                    "benefit": "Activates the core and upper body."
+                }
             ]
         }
 
@@ -36,9 +64,21 @@ def select_routine(intensity, requested_intensity="unknown"):
             "name": "Gentle Yoga",
             "description": "A light and relaxing yoga routine.",
             "poses": [
-                "Child's Pose",
-                "Cat-Cow",
-                "Easy Seated Pose"
+                {
+                    "name": "Child's Pose",
+                    "duration": 3,
+                    "benefit": "Encourages relaxation and gentle stretching."
+                },
+                {
+                    "name": "Cat-Cow",
+                    "duration": 4,
+                    "benefit": "Improves spinal mobility and body awareness."
+                },
+                {
+                    "name": "Easy Seated Pose",
+                    "duration": 3,
+                    "benefit": "Supports calm breathing and relaxation."
+                }
             ]
         }
 
@@ -48,10 +88,26 @@ def select_routine(intensity, requested_intensity="unknown"):
             "name": "Balanced Yoga",
             "description": "A moderate yoga routine for balance and flexibility.",
             "poses": [
-                "Cat-Cow",
-                "Downward-Facing Dog",
-                "Warrior II",
-                "Tree Pose"
+                {
+                    "name": "Cat-Cow",
+                    "duration": 4,
+                    "benefit": "Warms up the spine and improves mobility."
+                },
+                {
+                    "name": "Downward-Facing Dog",
+                    "duration": 5,
+                    "benefit": "Stretches the back and legs."
+                },
+                {
+                    "name": "Warrior II",
+                    "duration": 5,
+                    "benefit": "Develops balance and lower-body strength."
+                },
+                {
+                    "name": "Tree Pose",
+                    "duration": 3,
+                    "benefit": "Practices balance and concentration."
+                }
             ]
         }
 
@@ -61,10 +117,26 @@ def select_routine(intensity, requested_intensity="unknown"):
             "name": "Active Yoga",
             "description": "A more energetic yoga routine.",
             "poses": [
-                "Cat-Cow",
-                "Warrior II",
-                "Chair Pose",
-                "Plank"
+                {
+                    "name": "Cat-Cow",
+                    "duration": 4,
+                    "benefit": "Warms up the spine and improves mobility."
+                },
+                {
+                    "name": "Warrior II",
+                    "duration": 5,
+                    "benefit": "Develops balance and lower-body strength."
+                },
+                {
+                    "name": "Chair Pose",
+                    "duration": 4,
+                    "benefit": "Builds leg and core strength."
+                },
+                {
+                    "name": "Plank",
+                    "duration": 3,
+                    "benefit": "Activates the core and upper body."
+                }
             ]
         }
 
@@ -88,4 +160,11 @@ if __name__ == "__main__":
 
     for pose in routine["poses"]:
 
-        print("-", pose)
+        print(
+            f"- {pose['name']} "
+            f"({pose['duration']} minutes)"
+        )
+
+        print(
+            f"  Benefit: {pose['benefit']}"
+        )

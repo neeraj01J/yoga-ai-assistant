@@ -52,10 +52,11 @@ def process_yoga_request(user_input):
         aggregated_output
     )
 
-    # Select the appropriate yoga routine
+    # Select a routine based on intensity and available time
     routine = select_routine(
         intensity,
-        requested_intensity
+        requested_intensity,
+        time_minutes
     )
 
     # Get fuzzy membership values and rule strengths

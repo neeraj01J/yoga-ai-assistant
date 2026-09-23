@@ -7,7 +7,7 @@ from fuzzy_logic.membership import triangular_membership
 def calculate_experience_memberships(experience):
 
     beginner = triangular_membership(
-        experience, 0, 5, 10
+        experience, 0, 2, 5
     )
 
     intermediate = triangular_membership(
@@ -15,7 +15,7 @@ def calculate_experience_memberships(experience):
     )
 
     advanced = triangular_membership(
-        experience, 5, 9.5, 10
+        experience, 5, 8, 10
     )
 
     return {
@@ -27,16 +27,18 @@ def calculate_experience_memberships(experience):
 
 if __name__ == "__main__":
 
-    experience = 4
+    experience_values = [2, 5, 8]
 
-    result = calculate_experience_memberships(
-        experience
-    )
+    for experience in experience_values:
 
-    print("Experience:", experience)
-
-    for category, degree in result.items():
-
-        print(
-            f"{category}: {degree:.3f}"
+        result = calculate_experience_memberships(
+            experience
         )
+
+        print("\nExperience:", experience)
+
+        for category, degree in result.items():
+
+            print(
+                f"{category}: {degree:.3f}"
+            )

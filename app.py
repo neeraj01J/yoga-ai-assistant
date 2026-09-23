@@ -1,4 +1,5 @@
 
+import pandas as pd
 import streamlit as st
 
 from app_logic import process_yoga_request
@@ -12,9 +13,15 @@ st.set_page_config(
 )
 
 
-# Stores the generated result between reruns.
+# Stores the generated result between Streamlit reruns.
 if "result" not in st.session_state:
     st.session_state.result = None
+
+
+# Clears the input and generated result.
+def reset_app():
+    st.session_state.result = None
+    st.session_state.yoga_input = ""
 
 
 st.title("🧘 AI-Based Yoga Routine Assistant")
@@ -47,17 +54,11 @@ with col1:
 
 with col2:
 
-    reset = st.button(
+    st.button(
         "🔄 Reset",
-        use_container_width=True
+        use_container_width=True,
+        on_click=reset_app
     )
-
-
-# Reset the generated result.
-if reset:
-
-    st.session_state.result = None
-    st.rerun()
 
 
 # Generate a new routine.
@@ -262,13 +263,22 @@ if st.session_state.result:
             memberships["Active"]
         )
 
+
+    # Use intensity values as the chart index.
+    chart_df = pd.DataFrame(
+        chart_data,
+        index=x_values
+    )
+
+    chart_df.index.name = "Intensity"
+
     st.line_chart(
-        chart_data
+        chart_df
     )
 
     st.caption(
         "The chart shows how the fuzzy system represents "
-        "Gentle, Balanced, and Active intensity."
+        "Gentle, Balanced, and Active intensity from 0 to 10."
     )
 
 
@@ -309,7 +319,7 @@ if st.session_state.result:
     st.warning(
         "Safety Note: These are general yoga suggestions. "
         "Stop if you experience pain or discomfort. "
-        "Consult a qualified instructor or healthcare professional "
+        "Consult a qualified yoga instructor or healthcare professional "
         "if you have health concerns or physical limitations."
     )
 

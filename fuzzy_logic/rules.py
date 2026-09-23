@@ -7,23 +7,42 @@ from fuzzy_logic.experience import calculate_experience_memberships
 
 def evaluate_beginner_short_rule(time, experience):
 
-    time_memberships = calculate_time_memberships(time)
-    experience_memberships = calculate_experience_memberships(experience)
-
-    return min(
-        time_memberships["Short"],
-        experience_memberships["Beginner"]
+    return evaluate_experience_time_rule(
+        time,
+        experience,
+        "Beginner",
+        "Short"
     )
 
 
 def evaluate_beginner_medium_rule(time, experience):
 
-    time_memberships = calculate_time_memberships(time)
-    experience_memberships = calculate_experience_memberships(experience)
+    return evaluate_experience_time_rule(
+        time,
+        experience,
+        "Beginner",
+        "Medium"
+    )
+
+
+def evaluate_experience_time_rule(
+    time,
+    experience,
+    experience_level,
+    time_level
+):
+
+    time_memberships = calculate_time_memberships(
+        time
+    )
+
+    experience_memberships = calculate_experience_memberships(
+        experience
+    )
 
     return min(
-        time_memberships["Medium"],
-        experience_memberships["Beginner"]
+        time_memberships[time_level],
+        experience_memberships[experience_level]
     )
 
 
@@ -52,25 +71,28 @@ def evaluate_intensity_preference_rule(
 
 if __name__ == "__main__":
 
-    time = 25
-    experience = 4
+    time = 45
+    experience = 5
 
-    short_strength = evaluate_beginner_short_rule(
+    intermediate_long_strength = evaluate_experience_time_rule(
         time,
-        experience
-    )
-
-    medium_strength = evaluate_beginner_medium_rule(
-        time,
-        experience
-    )
-
-    gentle_strength = evaluate_intensity_preference_rule(
         experience,
-        "gentle",
-        "gentle"
+        "Intermediate",
+        "Long"
     )
 
-    print(f"Short rule strength: {short_strength:.3f}")
-    print(f"Medium rule strength: {medium_strength:.3f}")
-    print(f"Gentle preference strength: {gentle_strength:.3f}")
+    active_strength = evaluate_intensity_preference_rule(
+        experience,
+        "active",
+        "active"
+    )
+
+    print(
+        "Intermediate + Long Time:",
+        f"{intermediate_long_strength:.3f}"
+    )
+
+    print(
+        "Active Preference:",
+        f"{active_strength:.3f}"
+    )

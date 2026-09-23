@@ -4,6 +4,7 @@
 from fuzzy_logic.rules import (
     evaluate_beginner_short_rule,
     evaluate_beginner_medium_rule,
+    evaluate_experience_time_rule,
     evaluate_intensity_preference_rule
 )
 
@@ -25,16 +26,47 @@ def aggregate_outputs(
 
     aggregated_output = []
 
-    short_strength = evaluate_beginner_short_rule(
+    # Beginner time-based rules.
+    beginner_short_strength = evaluate_beginner_short_rule(
         time,
         experience
     )
 
-    medium_strength = evaluate_beginner_medium_rule(
+    beginner_medium_strength = evaluate_beginner_medium_rule(
         time,
         experience
     )
 
+    # Experience and time-based rules.
+    intermediate_medium_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Intermediate",
+        "Medium"
+    )
+
+    intermediate_long_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Intermediate",
+        "Long"
+    )
+
+    advanced_medium_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Advanced",
+        "Medium"
+    )
+
+    advanced_long_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Advanced",
+        "Long"
+    )
+
+    # Intensity preference rules.
     gentle_preference = evaluate_intensity_preference_rule(
         experience,
         requested_intensity,
@@ -53,23 +85,30 @@ def aggregate_outputs(
         "active"
     )
 
+    # Combine rule strengths.
+    gentle_strength = max(
+        beginner_short_strength,
+        beginner_medium_strength,
+        gentle_preference
+    )
+
+    balanced_strength = max(
+        intermediate_medium_strength,
+        balanced_preference
+    )
+
+    active_strength = max(
+        intermediate_long_strength,
+        advanced_medium_strength,
+        advanced_long_strength,
+        active_preference
+    )
+
     for intensity in output_universe:
 
         output_memberships = calculate_output_memberships(
             intensity
         )
-
-        gentle_strength = max(
-            short_strength,
-            gentle_preference
-        )
-
-        balanced_strength = max(
-            medium_strength,
-            balanced_preference
-        )
-
-        active_strength = active_preference
 
         gentle_value = min(
             gentle_strength,
@@ -136,16 +175,47 @@ def get_fuzzy_reasoning(
         experience
     )
 
-    short_strength = evaluate_beginner_short_rule(
+    # Beginner time-based rules.
+    beginner_short_strength = evaluate_beginner_short_rule(
         time,
         experience
     )
 
-    medium_strength = evaluate_beginner_medium_rule(
+    beginner_medium_strength = evaluate_beginner_medium_rule(
         time,
         experience
     )
 
+    # Experience and time-based rules.
+    intermediate_medium_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Intermediate",
+        "Medium"
+    )
+
+    intermediate_long_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Intermediate",
+        "Long"
+    )
+
+    advanced_medium_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Advanced",
+        "Medium"
+    )
+
+    advanced_long_strength = evaluate_experience_time_rule(
+        time,
+        experience,
+        "Advanced",
+        "Long"
+    )
+
+    # Intensity preference rules.
     gentle_preference = evaluate_intensity_preference_rule(
         experience,
         requested_intensity,
@@ -166,24 +236,51 @@ def get_fuzzy_reasoning(
 
     return {
         "time_memberships": time_memberships,
+
         "experience_memberships": experience_memberships,
+
         "rule_strengths": {
+
             "Beginner + Short Time": round(
-                short_strength,
+                beginner_short_strength,
                 3
             ),
+
             "Beginner + Medium Time": round(
-                medium_strength,
+                beginner_medium_strength,
                 3
             ),
+
+            "Intermediate + Medium Time": round(
+                intermediate_medium_strength,
+                3
+            ),
+
+            "Intermediate + Long Time": round(
+                intermediate_long_strength,
+                3
+            ),
+
+            "Advanced + Medium Time": round(
+                advanced_medium_strength,
+                3
+            ),
+
+            "Advanced + Long Time": round(
+                advanced_long_strength,
+                3
+            ),
+
             "Gentle Preference": round(
                 gentle_preference,
                 3
             ),
+
             "Balanced Preference": round(
                 balanced_preference,
                 3
             ),
+
             "Active Preference": round(
                 active_preference,
                 3
@@ -196,9 +293,9 @@ def get_fuzzy_reasoning(
 
 if __name__ == "__main__":
 
-    time = 25
-    experience = 4
-    requested_intensity = "gentle"
+    time = 45
+    experience = 5
+    requested_intensity = "active"
 
     aggregated_output = aggregate_outputs(
         time,

@@ -1,18 +1,74 @@
 
 # Generates a short explanation using Gemini and LangChain.
 
+import os
 import time
+from pathlib import Path
 
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 
-load_dotenv()
+# Load the .env file from the project directory.
+env_path = Path(__file__).resolve().parent / ".env"
+
+load_dotenv(dotenv_path=env_path, override=True)
+
+
+# Get API key from Streamlit Cloud Secrets or local .env.
+def get_gemini_api_key():
+    """
+    Loads the Gemini API key from Streamlit Secrets
+    or the local .env file.
+
+    Supports both:
+    - GOOGLE_API_KEY
+    - GEMINI_API_KEY
+    """
+
+    # Try Streamlit Cloud Secrets first.
+    try:
+        api_key = st.secrets.get("GOOGLE_API_KEY")
+
+        if api_key:
+            return api_key
+
+        # Support the alternative secret name.
+        api_key = st.secrets.get("GEMINI_API_KEY")
+
+        if api_key:
+            return api_key
+
+    except Exception:
+        # Streamlit Secrets may not exist locally.
+        pass
+
+    # Read from the local .env file.
+    # GOOGLE_API_KEY is your current variable name.
+    api_key = os.getenv("GOOGLE_API_KEY")
+
+    if api_key:
+        return api_key
+
+    # Fallback for GEMINI_API_KEY.
+    return os.getenv("GEMINI_API_KEY")
+
+
+GOOGLE_API_KEY = get_gemini_api_key()
+
+
+if not GOOGLE_API_KEY:
+    raise ValueError(
+        "GOOGLE_API_KEY is missing. "
+        "Add it to Streamlit Secrets or your .env file."
+    )
 
 
 # Create Gemini model.
 model = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",
+    google_api_key=GOOGLE_API_KEY,
     timeout=60,
     max_retries=0,
     disable_streaming=True,

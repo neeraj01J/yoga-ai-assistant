@@ -1,68 +1,83 @@
 
 # 🧘 AI-Based Yoga Routine Selection Assistant
 
-An AI-powered yoga routine selection assistant that generates personalized yoga routines based on a user's **experience level, available time, and preferred intensity**.
+An AI-powered yoga routine selection assistant that generates personalized yoga routines based on a user's experience level, available time, and preferred intensity.
 
-The project combines **Artificial Intelligence and Fuzzy Logic** to select suitable yoga routines and provide recommended yoga poses.
+The project combines **Artificial Intelligence (AI)** and **Fuzzy Logic** to analyze user preferences, calculate an appropriate yoga intensity, and recommend a suitable yoga routine.
 
-The application features a Streamlit web interface where users can describe their yoga requirements in natural language and receive a personalized routine.
+The application provides a Streamlit web interface where users can describe their yoga requirements using natural language.
 
 ---
 
 ## 📌 Project Overview
 
-The AI-Based Yoga Routine Selection Assistant is designed to provide personalized yoga routine recommendations.
+The AI-Based Yoga Routine Selection Assistant is designed to help users select a suitable yoga routine based on their individual requirements.
 
-Users can describe their requirements using natural language, for example:
+Users can enter a description such as:
 
 > I am a beginner. I have 25 minutes and want a gentle yoga routine.
 
-The system processes the user's requirements, identifies relevant preferences, and uses fuzzy logic to determine an appropriate routine intensity.
+The application processes the user's input using an AI-based preference extraction system and fuzzy logic.
 
-The application then generates a yoga routine containing recommended poses, durations, benefits, and an AI-generated explanation.
+The fuzzy inference system evaluates factors such as:
+
+- Yoga experience
+- Available time
+- Preferred intensity
+
+Based on the processed preferences, the application generates a suitable yoga routine with recommended poses, durations, benefits, and an AI-generated explanation.
 
 ---
 
 ## ✨ Features
 
-### 🤖 AI-Powered Routine Generation
+### 🤖 AI-Based Processing
 
 - Accepts natural-language yoga requirements.
-- Processes user preferences using an AI service.
-- Generates personalized yoga routines.
+- Extracts user preferences from input.
+- Processes experience level and available time.
+- Supports AI-generated yoga routine selection.
 - Provides an explanation for the generated routine.
+- Handles AI service errors and timeout situations.
 
 ### 🧠 Fuzzy Logic System
 
 - Time membership functions.
 - Experience membership functions.
+- Preference processing.
 - Fuzzy rule evaluation.
 - Mamdani aggregation.
 - Centroid defuzzification.
 - Fuzzy intensity calculation.
-- Gentle, Balanced, and Active intensity membership functions.
+- Gentle, Balanced, and Active intensity categories.
+- Fuzzy membership function visualization.
 
-### 🧘 Yoga Routine Recommendations
+### 🧘 Yoga Routine Selection
 
-- Automatic routine selection.
+- Automatic yoga routine selection.
 - Recommended yoga poses.
 - Pose duration.
-- Benefits of each pose.
+- Pose benefits.
 - Total routine duration.
 - Number of recommended poses.
+- Personalized routine description.
+- AI-generated explanation.
 
 ### 🖥️ Streamlit Web Interface
 
-- User-friendly web interface.
-- Natural-language input using a text area.
+- Simple and user-friendly interface.
+- Natural-language input field.
 - Generate Yoga Routine button.
 - Reset functionality.
 - User preference summary.
 - Routine summary metrics.
 - Fuzzy calculation visibility toggle.
-- Fuzzy membership function visualization.
-- AI-generated explanation.
-- Safety information for users.
+- Fuzzy intensity score display.
+- Fuzzy membership function chart.
+- Fuzzy reasoning details.
+- Recommended pose cards.
+- AI explanation section.
+- Yoga safety information.
 - Testing examples.
 
 ### ⚠️ Error Handling
@@ -71,6 +86,7 @@ The application then generates a yoga routine containing recommended poses, dura
 - API quota error handling.
 - Connection error handling.
 - Expandable technical error details.
+- User-friendly error messages.
 
 ---
 
@@ -82,11 +98,11 @@ The application then generates a yoga routine containing recommended poses, dura
 | Streamlit | Web application interface |
 | Fuzzy Logic | Intensity calculation and routine selection |
 | Google Gemini / AI Service | Natural-language processing and routine generation |
-| HTTPX / HTTP Core | AI service communication through the application dependencies |
 | Git | Version control |
 | GitHub | Source code hosting |
+| Virtual Environment | Dependency isolation |
 
-> The exact AI integration and dependency configuration are defined in the project's application and dependency files.
+> The exact AI provider configuration and dependencies are defined in the project source files and environment configuration.
 
 ---
 
@@ -96,32 +112,54 @@ The application then generates a yoga routine containing recommended poses, dura
 yoga-ai-assistant/
 │
 ├── fuzzy_logic/
-│   ├── membership.py
+│   │
+│   ├── __pycache__/
+│   │
 │   ├── experience.py
-│   ├── rules.py
-│   ├── output.py
 │   ├── inference.py
-│   └── routine.py
+│   ├── membership.py
+│   ├── output.py
+│   ├── preference.py
+│   ├── routine.py
+│   └── rules.py
 │
-├── app.py
-├── app_logic.py
+├── __pycache__/
+│
+├── .env
 ├── .gitignore
+│
+├── ai_explanation.py
+├── ai_extractor.py
+├── app_logic.py
+├── app.py
+├── gemini_test.py
+├── main.py
 ├── README.md
-└── .venv/
+└── validator.py
 ```
 
-### Main Files
+### Project Files
 
-| File | Description |
+| File / Folder | Description |
 |---|---|
-| `app.py` | Streamlit user interface and application flow |
-| `app_logic.py` | Processes user requirements and generates the yoga routine |
-| `membership.py` | Defines fuzzy membership functions |
+| `fuzzy_logic/` | Contains the fuzzy logic modules used by the application |
 | `experience.py` | Handles experience-related fuzzy calculations |
-| `rules.py` | Contains fuzzy inference rules |
+| `inference.py` | Performs fuzzy inference processing |
+| `membership.py` | Defines fuzzy membership functions |
 | `output.py` | Defines output membership functions |
-| `inference.py` | Performs fuzzy inference calculations |
+| `preference.py` | Supports preference-related processing |
 | `routine.py` | Supports yoga routine selection |
+| `rules.py` | Contains fuzzy inference rules |
+| `ai_explanation.py` | Handles AI-based routine explanations |
+| `ai_extractor.py` | Extracts user preferences from natural-language input |
+| `app_logic.py` | Contains the main application processing logic |
+| `app.py` | Streamlit application interface |
+| `gemini_test.py` | Used for testing the Gemini AI integration |
+| `main.py` | Main Python entry point or development file |
+| `validator.py` | Validates input or extracted preference data |
+| `.env` | Stores environment configuration and secret values |
+| `.gitignore` | Specifies files excluded from Git tracking |
+| `README.md` | Project documentation |
 
 ---
 
@@ -134,13 +172,19 @@ User enters yoga requirements
 Streamlit user interface
             │
             ▼
-Process user input using AI
+Process user input
             │
             ▼
-Extract user preferences
+Extract user preferences using AI
             │
             ▼
-Fuzzy logic processing
+Validate extracted preferences
+            │
+            ▼
+Process time and experience factors
+            │
+            ▼
+Calculate fuzzy membership values
             │
             ▼
 Evaluate fuzzy rules
@@ -152,28 +196,31 @@ Mamdani aggregation
 Centroid defuzzification
             │
             ▼
-Calculate routine intensity
+Calculate yoga intensity
             │
             ▼
 Select suitable yoga routine
             │
             ▼
-Display recommended poses
+Generate routine explanation
             │
             ▼
-Display AI explanation
+Display recommended yoga poses
 ```
 
 ---
 
-## 🧠 Fuzzy Logic Process
+## 🧠 Fuzzy Logic System
 
-The fuzzy inference system uses user-related inputs to calculate an appropriate yoga intensity.
+The fuzzy logic system is used to handle uncertain or flexible user preferences.
+
+Instead of depending only on fixed categories, fuzzy logic allows an input to have different degrees of membership in a category.
 
 ### Input Factors
 
 - Available time.
 - Yoga experience.
+- User preference information.
 
 ### Output Categories
 
@@ -183,14 +230,15 @@ The fuzzy inference system uses user-related inputs to calculate an appropriate 
 
 ### Fuzzy Processing Steps
 
-1. Calculate input membership values.
-2. Evaluate fuzzy rules.
-3. Perform Mamdani aggregation.
-4. Apply centroid defuzzification.
-5. Calculate the final intensity score.
-6. Select an appropriate yoga routine.
+1. Receive the processed user preferences.
+2. Calculate input membership values.
+3. Evaluate fuzzy rules.
+4. Perform Mamdani aggregation.
+5. Apply centroid defuzzification.
+6. Calculate the final intensity score.
+7. Select a suitable yoga routine.
 
-The application also provides a fuzzy membership function chart for technical inspection.
+The Streamlit interface provides an optional fuzzy calculation section where users can inspect the intensity score, membership function chart, membership values, and rule strengths.
 
 ---
 
@@ -230,21 +278,29 @@ Using Git Bash:
 source .venv/Scripts/activate
 ```
 
-### 5. Install Dependencies
+### 5. Install Project Dependencies
 
-If the project contains a `requirements.txt` file:
+If a `requirements.txt` file is available:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Otherwise, install the dependencies specified by the project configuration.
+Otherwise, install the dependencies required by the project configuration.
 
-### 6. Configure the AI Service
+### 6. Configure Environment Variables
 
-Configure the required AI service credentials according to the implementation used in `app_logic.py`.
+Create or configure the `.env` file with the required AI service settings.
 
-Do not commit API keys or other confidential credentials to GitHub.
+Example:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+> The environment variable name must match the name used by the project code.
+
+Do not upload API keys or other confidential information to GitHub.
 
 ### 7. Run the Streamlit Application
 
@@ -252,7 +308,7 @@ Do not commit API keys or other confidential credentials to GitHub.
 python -m streamlit run app.py
 ```
 
-The application will open in your browser at a local Streamlit address, normally:
+The application will normally be available at:
 
 ```text
 http://localhost:8501
@@ -290,33 +346,46 @@ I am a beginner. I only have 10 minutes and want gentle yoga.
 
 ## 📊 Application Output
 
-The application provides:
+The application displays the following information after generating a routine:
 
-- Detected user experience.
+- User experience level.
 - Available time.
 - Preferred intensity.
 - Number of recommended poses.
 - Total routine duration.
 - Selected yoga routine.
+- Routine description.
 - Recommended yoga poses.
-- Pose durations.
+- Pose duration.
 - Pose benefits.
 - AI-generated explanation.
 - Fuzzy intensity score.
-- Fuzzy membership function chart.
-- Fuzzy reasoning details.
+- Fuzzy membership function visualization.
+- Fuzzy membership values.
+- Fuzzy rule strengths.
+- Safety information.
 
 ---
 
-## ⚠️ Safety Notice
+## 🧩 Error Handling
 
-The application provides general yoga suggestions and is not a replacement for professional medical advice or instruction.
+The application includes error handling for common AI service issues.
 
-Users should:
+### Timeout Error
 
-- Stop if they experience pain or discomfort.
-- Practice within their individual limits.
-- Consult a qualified yoga instructor or healthcare professional if they have health concerns or physical limitations.
+If the AI service takes too long to respond, the application displays a timeout message and suggests trying again.
+
+### API Quota Error
+
+If the AI service usage limit is reached, the application displays a quota-related message.
+
+### Connection Error
+
+If the application cannot connect to the AI service, the interface displays a connection error message.
+
+### Technical Error Details
+
+Additional error details can be viewed through the expandable error details section.
 
 ---
 
@@ -329,20 +398,23 @@ Users should:
 - [x] Mamdani aggregation
 - [x] Centroid defuzzification
 - [x] Yoga routine selection
-- [x] AI-based preference processing
-- [x] AI-generated yoga routine
+- [x] AI-based preference extraction
+- [x] Preference validation
+- [x] AI-generated routine explanation
 - [x] Streamlit user interface
+- [x] Natural-language user input
 - [x] Recommended yoga poses
 - [x] Routine summary
-- [x] Fuzzy intensity visualization
+- [x] Fuzzy intensity score
+- [x] Fuzzy membership function visualization
 - [x] Fuzzy reasoning display
 - [x] Reset functionality
 - [x] API error handling
 - [x] Timeout error handling
 - [x] GitHub repository setup
-- [ ] Additional testing
-- [ ] Deployment
-- [ ] Further UI improvements
+- [ ] Automated testing
+- [ ] Application deployment
+- [ ] Further routine personalization
 
 ---
 
@@ -351,15 +423,66 @@ Users should:
 Potential future improvements include:
 
 - User accounts and saved yoga routines.
-- Routine history.
-- More yoga poses and categories.
+- Yoga routine history.
+- Additional yoga poses and categories.
 - Voice-based user input.
 - Progress tracking.
-- Improved routine personalization.
-- Mobile-friendly enhancements.
-- Automated testing.
+- More advanced routine personalization.
+- Improved mobile responsiveness.
+- Automated unit testing.
 - Cloud deployment.
-- Additional AI service optimization.
+- AI request optimization.
+- Additional wellness and flexibility goals.
+
+---
+
+## ⚠️ Safety Notice
+
+This application provides general yoga suggestions for educational and informational purposes.
+
+Users should:
+
+- Stop exercising if they experience pain or discomfort.
+- Practice within their individual abilities.
+- Avoid forcing movements or poses.
+- Consult a qualified yoga instructor or healthcare professional if they have health concerns or physical limitations.
+
+The application is not a replacement for professional medical advice, diagnosis, or treatment.
+
+---
+
+## 🔐 Security Guidelines
+
+The project uses environment variables for configuration and API credentials.
+
+Make sure sensitive files are excluded from Git tracking.
+
+Recommended `.gitignore` entries:
+
+```gitignore
+.env
+.venv/
+__pycache__/
+*.pyc
+```
+
+Never commit API keys, passwords, or other private credentials to a public repository.
+
+---
+
+## 🌿 Git Branches
+
+The project uses Git for version control.
+
+Example development branches:
+
+```text
+master
+   │
+   └── ui-improvements
+```
+
+The `ui-improvements` branch is used for developing and testing user interface improvements before merging changes into the main branch.
 
 ---
 
@@ -369,10 +492,12 @@ Potential future improvements include:
 
 BSc Information Technology
 
-GitHub: [neeraj01J](https://github.com/neeraj01J)
+GitHub:  
+https://github.com/neeraj01J
 
 ---
 
 ## 📄 License
 
 This project is developed for educational and academic purposes.
+```

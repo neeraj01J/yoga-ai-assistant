@@ -2,6 +2,7 @@
 import streamlit as st
 
 from app_logic import process_yoga_request
+from ai_explanation import generate_routine_explanation
 from fuzzy_logic.output import calculate_output_memberships
 
 
@@ -26,7 +27,7 @@ st.markdown(
 
     /* =========================================
        APPLICATION
-    ========================================= */
+       ========================================= */
 
     .stApp {
         background-color: var(--background-color);
@@ -49,7 +50,7 @@ st.markdown(
 
     /* =========================================
        TYPOGRAPHY
-    ========================================= */
+       ========================================= */
 
     h1 {
         font-size: 2.35rem !important;
@@ -79,7 +80,7 @@ st.markdown(
 
     /* =========================================
        BRAND AND INTRODUCTION
-    ========================================= */
+       ========================================= */
 
     .brand-label {
         font-size: 0.72rem;
@@ -100,7 +101,7 @@ st.markdown(
 
     /* =========================================
        TEXT AREA
-    ========================================= */
+       ========================================= */
 
     .stTextArea label {
         font-size: 0.88rem !important;
@@ -109,11 +110,16 @@ st.markdown(
 
     .stTextArea textarea {
         border-radius: 14px !important;
-        border: 1px solid var(--border-color, #d9dee7) !important;
+        border: 1px solid var(
+            --border-color,
+            #d9dee7
+        ) !important;
+
         padding: 15px !important;
         font-size: 0.95rem !important;
         line-height: 1.6 !important;
         box-shadow: none !important;
+
         transition:
             border-color 0.2s ease,
             box-shadow 0.2s ease !important;
@@ -121,20 +127,28 @@ st.markdown(
 
     .stTextArea textarea:focus {
         border-color: var(--primary-color) !important;
-        box-shadow: 0 0 0 1px var(--primary-color) !important;
+        box-shadow: 0 0 0 1px var(
+            --primary-color
+        ) !important;
     }
 
 
     /* =========================================
        BUTTONS
-    ========================================= */
+       ========================================= */
 
     .stButton > button {
         min-height: 45px;
         border-radius: 12px !important;
-        border: 1px solid var(--border-color, #d9dee7) !important;
+
+        border: 1px solid var(
+            --border-color,
+            #d9dee7
+        ) !important;
+
         font-size: 0.88rem !important;
         font-weight: 650 !important;
+
         transition:
             transform 0.2s ease,
             border-color 0.2s ease,
@@ -153,13 +167,21 @@ st.markdown(
 
     /* =========================================
        METRIC CARDS
-    ========================================= */
+       ========================================= */
 
     [data-testid="stMetric"] {
-        background: var(--secondary-background-color);
-        border: 1px solid var(--border-color, #d9dee7);
+        background: var(
+            --secondary-background-color
+        );
+
+        border: 1px solid var(
+            --border-color,
+            #d9dee7
+        );
+
         border-radius: 14px;
         padding: 15px 17px;
+
         transition:
             transform 0.2s ease,
             border-color 0.2s ease;
@@ -183,13 +205,22 @@ st.markdown(
 
     /* =========================================
        BORDERED CONTAINERS
-    ========================================= */
+       ========================================= */
 
     [data-testid="stVerticalBlockBorderWrapper"] {
         border-radius: 15px !important;
-        border: 1px solid var(--border-color, #d9dee7) !important;
-        background: var(--secondary-background-color);
+
+        border: 1px solid var(
+            --border-color,
+            #d9dee7
+        ) !important;
+
+        background: var(
+            --secondary-background-color
+        );
+
         padding: 5px;
+
         transition: border-color 0.2s ease;
     }
 
@@ -200,18 +231,25 @@ st.markdown(
 
     /* =========================================
        EXPANDERS
-    ========================================= */
+       ========================================= */
 
     [data-testid="stExpander"] {
         border-radius: 12px !important;
-        border: 1px solid var(--border-color, #d9dee7) !important;
-        background: var(--secondary-background-color);
+
+        border: 1px solid var(
+            --border-color,
+            #d9dee7
+        ) !important;
+
+        background: var(
+            --secondary-background-color
+        );
     }
 
 
     /* =========================================
        ALERTS
-    ========================================= */
+       ========================================= */
 
     [data-testid="stAlert"] {
         border-radius: 12px !important;
@@ -220,18 +258,22 @@ st.markdown(
 
     /* =========================================
        DIVIDERS
-    ========================================= */
+       ========================================= */
 
     hr {
         margin-top: 1.4rem !important;
         margin-bottom: 1.4rem !important;
-        border-color: var(--border-color, #d9dee7) !important;
+
+        border-color: var(
+            --border-color,
+            #d9dee7
+        ) !important;
     }
 
 
     /* =========================================
        PROGRESS BAR
-    ========================================= */
+       ========================================= */
 
     [data-testid="stProgressBar"] > div > div {
         border-radius: 20px;
@@ -240,7 +282,7 @@ st.markdown(
 
     /* =========================================
        RESPONSIVE DESIGN
-    ========================================= */
+       ========================================= */
 
     @media (max-width: 700px) {
 
@@ -276,9 +318,12 @@ st.markdown(
 # =========================================================
 
 if "result" not in st.session_state:
+
     st.session_state.result = None
 
+
 if "show_fuzzy" not in st.session_state:
+
     st.session_state.show_fuzzy = False
 
 
@@ -295,7 +340,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("🧘 AI-Based Yoga Routine Assistant")
+st.title(
+    "🧘 AI-Based Yoga Routine Assistant"
+)
 
 st.markdown(
     """
@@ -314,11 +361,14 @@ st.markdown(
 
 user_input = st.text_area(
     "Describe your yoga requirements",
+
     placeholder=(
         "I am a beginner. I have 25 minutes "
         "and want a gentle yoga routine."
     ),
+
     height=120,
+
     key="yoga_input"
 )
 
@@ -329,12 +379,14 @@ user_input = st.text_area(
 
 col1, col2 = st.columns(2)
 
+
 with col1:
 
     generate = st.button(
         "✨ Generate Yoga Routine",
         use_container_width=True
     )
+
 
 with col2:
 
@@ -351,6 +403,7 @@ with col2:
 if reset:
 
     st.session_state.result = None
+
     st.session_state.show_fuzzy = False
 
     st.rerun()
@@ -362,7 +415,7 @@ if reset:
 
 if generate:
 
-    if user_input.strip() == "":
+    if not user_input.strip():
 
         st.warning(
             "Please describe your yoga requirements."
@@ -376,15 +429,22 @@ if generate:
                 "Creating your personalized yoga routine..."
             ):
 
-                st.session_state.result = process_yoga_request(
-                    user_input
+                # Generate the routine without waiting
+                # for the optional Gemini explanation.
+                st.session_state.result = (
+                    process_yoga_request(
+                        user_input,
+                        generate_explanation=False
+                    )
                 )
 
                 st.session_state.show_fuzzy = False
 
         except Exception as error:
 
-            error_message = str(error).lower()
+            error_message = str(
+                error
+            ).lower()
 
 
             # ---------------------------------------------
@@ -403,8 +463,8 @@ if generate:
 
                 st.info(
                     "Please try again in a few seconds. "
-                    "The request may have been delayed by the "
-                    "AI service or your internet connection."
+                    "The request may have been delayed by "
+                    "the AI service or your internet connection."
                 )
 
 
@@ -469,9 +529,13 @@ if generate:
             # ERROR DETAILS
             # ---------------------------------------------
 
-            with st.expander("View Error Details"):
+            with st.expander(
+                "View Error Details"
+            ):
 
-                st.exception(error)
+                st.exception(
+                    error
+                )
 
 
 # =========================================================
@@ -483,8 +547,11 @@ if st.session_state.result:
     result = st.session_state.result
 
     preferences = result["preferences"]
+
     routine = result["routine"]
+
     fuzzy_reasoning = result["fuzzy_reasoning"]
+
     intensity = result["intensity"]
 
 
@@ -501,9 +568,12 @@ if st.session_state.result:
     # USER PREFERENCES
     # =====================================================
 
-    st.subheader("👤 Your Preferences")
+    st.subheader(
+        "👤 Your Preferences"
+    )
 
     col1, col2, col3 = st.columns(3)
+
 
     with col1:
 
@@ -512,12 +582,14 @@ if st.session_state.result:
             preferences["experience"].title()
         )
 
+
     with col2:
 
         st.metric(
             "Available Time",
             f'{preferences["time_minutes"]} min'
         )
+
 
     with col3:
 
@@ -531,16 +603,24 @@ if st.session_state.result:
     # ROUTINE SUMMARY
     # =====================================================
 
-    st.subheader("📊 Routine Summary")
-
-    total_duration = sum(
-        pose["duration"]
-        for pose in routine["poses"]
+    st.subheader(
+        "📊 Routine Summary"
     )
 
-    pose_count = len(routine["poses"])
+    total_duration = sum(
+
+        pose["duration"]
+        for pose in routine["poses"]
+
+    )
+
+    pose_count = len(
+        routine["poses"]
+    )
+
 
     col1, col2 = st.columns(2)
+
 
     with col1:
 
@@ -548,6 +628,7 @@ if st.session_state.result:
             "Number of Poses",
             pose_count
         )
+
 
     with col2:
 
@@ -574,7 +655,10 @@ if st.session_state.result:
     # FUZZY BUTTON
     # =====================================================
 
-    fuzzy_col1, fuzzy_col2 = st.columns([3, 1])
+    fuzzy_col1, fuzzy_col2 = st.columns(
+        [3, 1]
+    )
+
 
     with fuzzy_col1:
 
@@ -583,21 +667,32 @@ if st.session_state.result:
             "used to calculate the routine intensity."
         )
 
+
     with fuzzy_col2:
 
         fuzzy_button_label = (
+
             "🔽 Hide"
             if st.session_state.show_fuzzy
             else "🧠 Fuzzy"
+
         )
 
+
         if st.button(
+
             fuzzy_button_label,
-            use_container_width=True
+
+            use_container_width=True,
+
+            key="fuzzy_toggle_button"
+
         ):
 
             st.session_state.show_fuzzy = (
+
                 not st.session_state.show_fuzzy
+
             )
 
             st.rerun()
@@ -611,9 +706,14 @@ if st.session_state.result:
 
         st.divider()
 
-        with st.container(border=True):
 
-            st.header("🧠 Fuzzy Calculation")
+        with st.container(
+            border=True
+        ):
+
+            st.header(
+                "🧠 Fuzzy Calculation"
+            )
 
             st.caption(
                 "Technical explanation of how the fuzzy inference "
@@ -625,7 +725,9 @@ if st.session_state.result:
             # INTENSITY SCORE
             # ---------------------------------------------
 
-            st.subheader("🎯 Fuzzy Intensity Score")
+            st.subheader(
+                "🎯 Fuzzy Intensity Score"
+            )
 
             st.metric(
                 "Calculated Intensity",
@@ -633,7 +735,13 @@ if st.session_state.result:
             )
 
             st.progress(
-                min(max(intensity / 10, 0.0), 1.0)
+                min(
+                    max(
+                        intensity / 10,
+                        0.0
+                    ),
+                    1.0
+                )
             )
 
             st.caption(
@@ -649,22 +757,42 @@ if st.session_state.result:
             # MEMBERSHIP FUNCTIONS
             # ---------------------------------------------
 
-            st.subheader("📈 Fuzzy Membership Functions")
+            st.subheader(
+                "📈 Fuzzy Membership Functions"
+            )
 
             x_values = [
-                round(i / 10, 1)
-                for i in range(0, 101)
+
+                round(
+                    i / 10,
+                    1
+                )
+
+                for i in range(
+                    0,
+                    101
+                )
+
             ]
 
+
             chart_data = {
+
                 "Gentle": [],
                 "Balanced": [],
                 "Active": []
+
             }
+
 
             for x in x_values:
 
-                memberships = calculate_output_memberships(x)
+                memberships = (
+                    calculate_output_memberships(
+                        x
+                    )
+                )
+
 
                 chart_data["Gentle"].append(
                     memberships["Gentle"]
@@ -678,7 +806,10 @@ if st.session_state.result:
                     memberships["Active"]
                 )
 
-            st.line_chart(chart_data)
+
+            st.line_chart(
+                chart_data
+            )
 
             st.caption(
                 "The graph represents the membership functions "
@@ -693,28 +824,41 @@ if st.session_state.result:
             # FUZZY REASONING
             # ---------------------------------------------
 
-            st.subheader("⚙️ Fuzzy Logic Reasoning")
+            st.subheader(
+                "⚙️ Fuzzy Logic Reasoning"
+            )
 
-            with st.expander("View Membership Values"):
 
-                st.write("Time Memberships")
+            with st.expander(
+                "View Membership Values"
+            ):
+
+                st.write(
+                    "Time Memberships"
+                )
 
                 st.json(
                     fuzzy_reasoning["time_memberships"]
                 )
 
-                st.write("Experience Memberships")
+
+                st.write(
+                    "Experience Memberships"
+                )
 
                 st.json(
                     fuzzy_reasoning["experience_memberships"]
                 )
 
 
-            with st.expander("View Rule Strengths"):
+            with st.expander(
+                "View Rule Strengths"
+            ):
 
                 st.json(
                     fuzzy_reasoning["rule_strengths"]
                 )
+
 
             st.info(
                 "Membership values represent the degree to which "
@@ -727,14 +871,22 @@ if st.session_state.result:
     # RECOMMENDED POSES
     # =====================================================
 
-    st.subheader("📋 Recommended Poses")
+    st.subheader(
+        "📋 Recommended Poses"
+    )
+
 
     for index, pose in enumerate(
+
         routine["poses"],
+
         start=1
+
     ):
 
-        with st.container(border=True):
+        with st.container(
+            border=True
+        ):
 
             st.markdown(
                 f"### {index}. {pose['name']}"
@@ -755,11 +907,90 @@ if st.session_state.result:
     # AI EXPLANATION
     # =====================================================
 
-    st.subheader("🤖 AI Explanation")
-
-    st.write(
-        result["explanation"]
+    st.subheader(
+        "🤖 AI Explanation"
     )
+
+    explanation = result.get(
+        "explanation"
+    )
+
+
+    # ---------------------------------------------
+    # Display existing explanation
+    # ---------------------------------------------
+
+    if explanation:
+
+        st.write(
+            explanation
+        )
+
+
+    # ---------------------------------------------
+    # Generate explanation separately
+    # ---------------------------------------------
+
+    else:
+
+        st.caption(
+            "Your routine is ready. Generate an optional "
+            "AI explanation to understand why it was selected."
+        )
+
+
+        if st.button(
+
+            "✨ Generate AI Explanation",
+
+            use_container_width=True,
+
+            key="generate_explanation_button"
+
+        ):
+
+            try:
+
+                with st.spinner(
+                    "Generating AI explanation..."
+                ):
+
+                    explanation = (
+                        generate_routine_explanation(
+
+                            result["preferences"],
+
+                            result["routine"],
+
+                            result["intensity"],
+
+                            result["fuzzy_reasoning"]
+
+                        )
+                    )
+
+
+                # Save the generated explanation.
+                st.session_state.result["explanation"] = (
+                    explanation
+                )
+
+                st.rerun()
+
+
+            except Exception as error:
+
+                st.error(
+                    "Unable to generate the AI explanation."
+                )
+
+                with st.expander(
+                    "View Explanation Error"
+                ):
+
+                    st.exception(
+                        error
+                    )
 
 
     # =====================================================
@@ -781,9 +1012,14 @@ if st.session_state.result:
 
 st.divider()
 
-st.subheader("🧪 Test the Assistant")
+st.subheader(
+    "🧪 Test the Assistant"
+)
 
-with st.expander("View testing examples"):
+
+with st.expander(
+    "View testing examples"
+):
 
     st.markdown(
         """

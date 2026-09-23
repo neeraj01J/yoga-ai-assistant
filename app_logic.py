@@ -1,9 +1,9 @@
 
-# Connects AI extraction, validation, fuzzy inference, and explanation.
+# Connects AI extraction, validation, fuzzy inference,
+# routine selection, and optional explanation.
 
 from ai_extractor import extract_yoga_preferences
 from validator import validate_preferences
-from ai_explanation import generate_routine_explanation
 
 from fuzzy_logic.inference import (
     aggregate_outputs,
@@ -14,24 +14,33 @@ from fuzzy_logic.inference import (
 from fuzzy_logic.routine import select_routine
 
 
-def process_yoga_request(user_input):
+def process_yoga_request(
+    user_input,
+    generate_explanation=False
+):
+    """
+    Processes the user's yoga request.
 
-    # Extract preferences using Gemini
+    By default, the routine is selected without waiting
+    for the optional Gemini explanation.
+    """
+
+    # 1. Extract preferences
     extracted_preferences = extract_yoga_preferences(
         user_input
     )
 
-    # Validate and clean the extracted data
+    # 2. Validate and clean preferences
     preferences = validate_preferences(
         extracted_preferences
     )
 
-    # Get time, experience, and intensity
+    # 3. Read validated preferences
     time_minutes = preferences["time_minutes"]
     experience = preferences["experience"]
     requested_intensity = preferences["intensity"]
 
-    # Convert experience level into a numerical value
+    # 4. Convert experience to numerical value
     experience_values = {
         "beginner": 2,
         "intermediate": 5,
@@ -40,59 +49,71 @@ def process_yoga_request(user_input):
 
     experience_value = experience_values[experience]
 
-    # Apply fuzzy inference
+    # 5. Apply fuzzy inference
     aggregated_output = aggregate_outputs(
         time_minutes,
         experience_value,
         requested_intensity
     )
 
-    # Calculate final intensity using centroid defuzzification
+    # 6. Defuzzify the aggregated output
     intensity = defuzzify(
         aggregated_output
     )
 
-    # Select a routine based on intensity and available time
+    intensity = round(intensity, 3)
+
+    # 7. Select a suitable yoga routine
     routine = select_routine(
         intensity,
         requested_intensity,
         time_minutes
     )
 
-    # Get fuzzy membership values and rule strengths
+    # 8. Get fuzzy reasoning
     fuzzy_reasoning = get_fuzzy_reasoning(
         time_minutes,
         experience_value,
         requested_intensity
     )
 
-    # Generate an explanation using Gemini
-    explanation = generate_routine_explanation(
-        preferences,
-        routine,
-        round(intensity, 3),
-        fuzzy_reasoning
-    )
-
-    # Return the complete result
-    return {
+    # 9. Prepare the result without blocking
+    # on the optional Gemini explanation.
+    result = {
         "preferences": preferences,
-        "intensity": round(intensity, 3),
+        "intensity": intensity,
         "routine": routine,
         "fuzzy_reasoning": fuzzy_reasoning,
-        "explanation": explanation
+        "explanation": None
     }
+
+    # 10. Generate explanation only when requested
+    if generate_explanation:
+        from ai_explanation import (
+            generate_routine_explanation
+        )
+
+        result["explanation"] = (
+            generate_routine_explanation(
+                preferences,
+                routine,
+                intensity,
+                fuzzy_reasoning
+            )
+        )
+
+    return result
 
 
 if __name__ == "__main__":
 
-    # Test the complete workflow
     user_input = input(
         "Describe your yoga requirements: "
     )
 
     result = process_yoga_request(
-        user_input
+        user_input,
+        generate_explanation=False
     )
 
     print("\nFinal Result:")
